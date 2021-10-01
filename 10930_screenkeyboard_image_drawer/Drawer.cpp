@@ -149,13 +149,16 @@ bool Drawer::draw(const Source &source, const char **error)
 
 void Drawer::_drawButton(QPainter &p_painter, int p_x, int p_y, int p_w, int p_h, const QString &p_name)
 {
-    int
-        x = _scaleX * p_x,
-        y = _scaleY * p_y,
-        w = _scaleX * p_w,
-        h = _scaleY * p_h
+    double
+        x = _scaleX * (double)p_x,
+        y = _scaleY * (double)p_y,
+        w = _scaleX * (double)p_w,
+        h = _scaleY * (double)p_h
     ;
-    p_painter.drawRect(x,y,w,h);
+    //p_painter.drawRect(x,y,w,h);
+    p_painter.drawRect(QRectF(x,y,w-1,h-1));
+
+    p_painter.drawText(QRect(x,y,w,h), p_name, QTextOption(Qt::AlignCenter));
 }
 
 

@@ -24,8 +24,8 @@ int main(int argc, char **argv)
 	}
 
     Drawer::Source drawerSource{
-        256,
-        256,
+        1024,
+        600,
         {
             24,
             10,
