@@ -146,8 +146,6 @@ bool Drawer::draw(const Source &source, const char **error)
 
 void Drawer::_drawButton(QPainter &p_painter, int p_x, int p_y, int p_w, int p_h, const QString &p_name)
 {
-    double scaleX=10, scaleY=10;
-
     int
         x = scaleX * p_x,
         y = scaleY * p_y,

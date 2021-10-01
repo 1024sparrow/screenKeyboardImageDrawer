@@ -8,7 +8,7 @@ class Drawer
 public:
     struct Source
     {
-        int width;// pixels of result pixmap
+        int width; // pixels of result pixmap
         int height;
         struct Buttons
         {
@@ -27,4 +27,5 @@ private:
     void _drawButton(QPainter &p_painter, int p_x, int p_y, int p_w, int p_h, const QString &p_name);
 
     QPixmap _pixmap;
+    double _scaleX=10, _scaleY=10;
 };
