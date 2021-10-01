@@ -1,6 +1,7 @@
 #include "Drawer.h"
 
 #include <QPainter>
+#include <QDebug>//boris debug
 
 #define E(T) {*error=#T"\n";return false;}
 
@@ -30,6 +31,125 @@ bool Drawer::draw(const Source &source, const char **error)
     painter.setPen(Qt::yellow);
     painter.drawRect(5,5,100,50);
 
+    int x{0},y{0};
+    for (QString oRow : source.buttons.rows)
+    {
+        int rowHeight = 0;
+        QString bnId;
+        int bnWidth = 0;
+
+        enum {
+            sRowHeight,
+            sBnId,
+            sBnWidth,
+            sEmergency
+        } state {sRowHeight};
+
+        for (char ch : oRow.toStdString())
+        {
+            //if (ch == ' ')
+            //    continue;
+            if (state == sRowHeight)
+            {
+                if (ch >= '0' && ch <= '9')
+                {
+                    rowHeight = 10 * rowHeight + static_cast<int>(ch - '0');
+                }
+                else if (ch == ':')
+                {
+                    bnId.clear();
+                    state = sBnId;
+                }
+                else
+                {
+                    state = sEmergency;
+                }
+            }
+            else if (state == sBnId)
+            {
+                qDebug() << "** " << ch;
+                if (ch == ' ')
+                {
+                    if (bnId.length())
+                    {
+                        // TODO: переходим к следующей кнопке
+                        //qDebug() << "  button " << bnId.c_str();
+                        qDebug() << "1 button " << bnId << "with width " << bnWidth;
+
+                        bnId.clear();
+                        state = sBnId;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+                else if (ch == ':')
+                {
+                    bnWidth = 0;
+                    state = sBnWidth;
+                }
+                else
+                {
+                    bnId += ch;
+                }
+            }
+            else if (state == sBnWidth)
+            {
+                qDebug() << "====button " << bnId << bnWidth << ":" << ch;
+                if (ch >= '0' && ch <= '9')
+                {
+                    bnWidth = 10 * bnWidth + static_cast<int>(ch - '0');
+                }
+                else if (ch == ' ')
+                {
+                    qDebug() << "2 button " << bnId << "with width " << bnWidth;
+                    bnId.clear();
+                    state = sBnId;
+                }
+                else
+                {
+                    qDebug() << "+++++++++" << ch;
+                }
+            }
+            //if (state)
+        }
+        if (state == sEmergency)
+        {
+            E(incorrect source data [1]);
+        }
+        qDebug() << "rowHeight:" << rowHeight;
+
+        y += rowHeight;
+    }
+
     //E(not implemented);
     return true;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
