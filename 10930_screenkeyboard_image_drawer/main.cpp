@@ -32,6 +32,7 @@ int main(int argc, char **argv)
             QStringList{
                 "2",
                 "2",
+                "3: Ctrl:4 Win:8 Space:8 Ctrl:4",
                 "3: Ctrl:4 Win Alt:4 Space:8 Ctrl:4"
             }
         }
@@ -46,7 +47,7 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    return 0;//
+    //return 0;//
     QLabel label;
     label.setPixmap(drawer.pixmap());
     label.setFixedSize(label.sizeHint());

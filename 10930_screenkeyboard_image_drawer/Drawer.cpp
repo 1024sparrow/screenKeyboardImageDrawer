@@ -29,7 +29,7 @@ bool Drawer::draw(const Source &source, const char **error)
 
     QPainter painter(&_pixmap);
     painter.setPen(Qt::yellow);
-    painter.drawRect(5,5,100,50);
+    //painter.drawRect(5,5,100,50);
 
     int x{0},y{0};
     for (QString oRow : source.buttons.rows)
@@ -37,9 +37,10 @@ bool Drawer::draw(const Source &source, const char **error)
         int rowHeight = 0;
         QString bnId;
         int bnWidth = 0;
+        x = 0;
 
         enum {
-            sRowHeight,
+            sRowHeight = 0,
             sBnId,
             sBnWidth,
             sEmergency
@@ -67,7 +68,7 @@ bool Drawer::draw(const Source &source, const char **error)
             }
             else if (state == sBnId)
             {
-                qDebug() << "** " << ch;
+                //qDebug() << "** " << ch;
                 if (ch == ' ')
                 {
                     if (bnId.length())
@@ -75,6 +76,8 @@ bool Drawer::draw(const Source &source, const char **error)
                         // TODO: переходим к следующей кнопке
                         //qDebug() << "  button " << bnId.c_str();
                         qDebug() << "1 button " << bnId << "with width " << bnWidth;
+                        _drawButton(painter, x, y, bnWidth, rowHeight, bnId);
+                        x += bnWidth;
 
                         bnId.clear();
                         state = sBnId;
@@ -96,7 +99,7 @@ bool Drawer::draw(const Source &source, const char **error)
             }
             else if (state == sBnWidth)
             {
-                qDebug() << "====button " << bnId << bnWidth << ":" << ch;
+                //qDebug() << "====button " << bnId << bnWidth << ":" << ch;
                 if (ch >= '0' && ch <= '9')
                 {
                     bnWidth = 10 * bnWidth + static_cast<int>(ch - '0');
@@ -104,6 +107,8 @@ bool Drawer::draw(const Source &source, const char **error)
                 else if (ch == ' ')
                 {
                     qDebug() << "2 button " << bnId << "with width " << bnWidth;
+                    _drawButton(painter, x, y, bnWidth, rowHeight, bnId);
+                    x += bnWidth;
                     bnId.clear();
                     state = sBnId;
                 }
@@ -112,11 +117,15 @@ bool Drawer::draw(const Source &source, const char **error)
                     qDebug() << "+++++++++" << ch;
                 }
             }
-            //if (state)
         }
         if (state == sEmergency)
         {
             E(incorrect source data [1]);
+        }
+        else if (bnWidth)
+        {
+            qDebug() << "3 button " << bnId << "with width " << bnWidth;
+            _drawButton(painter, x, y, bnWidth, rowHeight, bnId);
         }
         qDebug() << "rowHeight:" << rowHeight;
 
@@ -125,6 +134,19 @@ bool Drawer::draw(const Source &source, const char **error)
 
     //E(not implemented);
     return true;
+}
+
+void Drawer::_drawButton(QPainter &p_painter, int p_x, int p_y, int p_w, int p_h, const QString &p_name)
+{
+    double scaleX=10, scaleY=10;
+
+    int
+        x = scaleX * p_x,
+        y = scaleY * p_y,
+        w = scaleX * p_w,
+        h = scaleY * p_h
+    ;
+    p_painter.drawRect(x,y,w,h);
 }
 
 

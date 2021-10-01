@@ -24,5 +24,7 @@ public:
     QPixmap pixmap() const;
     bool draw(const Source &source, const char **error);
 private:
+    void _drawButton(QPainter &p_painter, int p_x, int p_y, int p_w, int p_h, const QString &p_name);
+
     QPixmap _pixmap;
 };
