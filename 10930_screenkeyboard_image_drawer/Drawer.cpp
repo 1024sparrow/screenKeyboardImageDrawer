@@ -27,6 +27,9 @@ bool Drawer::draw(const Source &source, const char **error)
     _pixmap = QPixmap(source.width, source.height);
     _pixmap.fill(QColor(0x44,0,0));
 
+    _scaleX = source.width / double(source.buttons.width);
+    _scaleY = source.height / double(source.buttons.height);
+
     QPainter painter(&_pixmap);
     painter.setPen(Qt::yellow);
     //painter.drawRect(5,5,100,50);
@@ -147,10 +150,10 @@ bool Drawer::draw(const Source &source, const char **error)
 void Drawer::_drawButton(QPainter &p_painter, int p_x, int p_y, int p_w, int p_h, const QString &p_name)
 {
     int
-        x = scaleX * p_x,
-        y = scaleY * p_y,
-        w = scaleX * p_w,
-        h = scaleY * p_h
+        x = _scaleX * p_x,
+        y = _scaleY * p_y,
+        w = _scaleX * p_w,
+        h = _scaleY * p_h
     ;
     p_painter.drawRect(x,y,w,h);
 }
