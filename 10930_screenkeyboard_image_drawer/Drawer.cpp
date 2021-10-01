@@ -127,9 +127,17 @@ bool Drawer::draw(const Source &source, const char **error)
             qDebug() << "3 button " << bnId << "with width " << bnWidth;
             _drawButton(painter, x, y, bnWidth, rowHeight, bnId);
         }
+//        qDebug() << "##" << source.width << x << bnWidth;
+        if (source.buttons.width != (x + bnWidth))
+        {
+            E(Incorrect width for row)
+        }
         qDebug() << "rowHeight:" << rowHeight;
-
         y += rowHeight;
+    }
+    if (source.buttons.height != y)
+    {
+        E(Incorrect height fow rows)
     }
 
     //E(not implemented);

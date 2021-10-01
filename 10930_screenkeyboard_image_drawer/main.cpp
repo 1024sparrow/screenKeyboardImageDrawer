@@ -28,10 +28,10 @@ int main(int argc, char **argv)
         256,
         {
             24,
-            7,
+            10,
             QStringList{
-                "2",
-                "2",
+                "2: Ctrl:4 Win:16 Ctrl:4",
+                "2: Ctrl:4 Win:20",
                 "3: Ctrl:4 Win:8 Space:8 Ctrl:4",
                 "3: Ctrl:4 Win Alt:4 Space:8 Ctrl:4"
             }
