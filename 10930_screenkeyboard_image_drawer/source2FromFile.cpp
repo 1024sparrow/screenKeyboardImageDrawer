@@ -62,7 +62,7 @@
 
 #define E(T) {*p_error=#T"\n";return false;}
 
-bool Drawer::sourceFromFile(const char *p_filePath, Source2 &p_retVal, const char **p_error)
+bool Drawer::sourceFromFile(const char *p_filePath, Source &p_retVal, const char **p_error)
 {
     QFile file(p_filePath);
     if (!file.open(QIODevice::ReadOnly))

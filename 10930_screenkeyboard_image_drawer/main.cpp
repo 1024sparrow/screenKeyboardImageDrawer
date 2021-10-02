@@ -37,23 +37,6 @@ OPTIONS:
 SOURCE FILE FORMAT:
 Source file is a JSON-file with content like following:
 {
-    "width": 1024,
-    "height": 600,
-    "buttons": {
-        "width": 24,
-        "height": 10,
-        "rows": [
-            "2: Ctrl:4 Win:16 Ctrl:4",
-            "2: Ctrl:4 Win:20",
-            "3: Ctrl:4 Win:8 Space:8 Ctrl:4",
-            "3: Ctrl:4 Win Alt:4 Space:8 Ctrl:4"
-        ]
-    }
-}
-
-or like wollowing:
-
-{
     variants: [
         {
             "orient": "v",
@@ -147,40 +130,44 @@ or like wollowing:
     }
 
     Drawer::Source drawerSource{
-        Drawer::Source::orientVertical,
-        {},
-        1024,
-        600,
         {
-            24,
-            10,
-            QStringList{
-                "2: Ctrl:4 Win:16 Ctrl:4",
-                "2: Ctrl:4 Win:20",
-                "3: Ctrl:4 Win:8 Space:8 Ctrl:4",
-                "3: Ctrl:4 Win Alt:4 Space:8 Ctrl:4"
+            {
+                Drawer::Source::SourceVariant::orientVertical,
+                {"ru","en"},
+                1024,
+                600,
+                {
+                    24,
+                    10,
+                    QStringList{
+                        "2: Ctrl:4 Win:16 Ctrl:4",
+                        "2: Ctrl:4 Win:20",
+                        "3: Ctrl:4 Win:8 Space:8 Ctrl:4",
+                        "3: Ctrl:4 Win Alt:4 Space:8 Ctrl:4"
+                    }
+                }
             }
         }
     };
 
-    QApplication app(argc, argv);
-    Drawer drawer;
-    const char *error = 0;
-    if (!drawer.draw(drawerSource, &error))
-    {
-        fputs(error, stderr);
-        return 1;
-    }
+//    QApplication app(argc, argv);
+//    Drawer drawer;
+//    const char *error = 0;
+//    if (!drawer.draw(drawerSource, &error))
+//    {
+//        fputs(error, stderr);
+//        return 1;
+//    }
 
-    //return 0;//
-    if (argGui)
-    {
-        QLabel label;
-        label.setPixmap(drawer.pixmap());
-        label.setFixedSize(label.sizeHint());
-        label.show();
-        return app.exec();
-    }
+//    //return 0;//
+//    if (argGui)
+//    {
+//        QLabel label;
+//        label.setPixmap(drawer.pixmap());
+//        label.setFixedSize(label.sizeHint());
+//        label.show();
+//        return app.exec();
+//    }
 
 	return 0;
 }

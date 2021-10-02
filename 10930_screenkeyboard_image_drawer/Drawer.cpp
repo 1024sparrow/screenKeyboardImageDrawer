@@ -16,6 +16,12 @@ QPixmap Drawer::pixmap() const
 
 bool Drawer::draw(const Source &source, const char **error)
 {
+    // boris here
+    E(not implemented);
+}
+
+bool Drawer::_drawVariant(const Source::SourceVariant &source, const char **error)
+{
 //    *error = "not iplemented\n";
 //    return false;
     //E(not implemented)
