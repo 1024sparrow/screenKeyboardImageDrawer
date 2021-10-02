@@ -3,7 +3,7 @@
 #include <QPixmap>
 #include <QStringList>
 
-class Drawer
+class Drawer final
 {
 public:
     struct Source
