@@ -8,6 +8,11 @@ class Drawer final
 public:
     struct Source
     {
+        enum {
+            orientVertical,
+            orientHorizontal
+        } orientation;
+        QStringList layouts;
         int width; // pixels of result pixmap
         int height;
         struct Buttons
@@ -18,6 +23,10 @@ public:
         } buttons;
 
         //const char *
+    };
+    struct Source2
+    {
+        QList<Source> variants;
     };
 
     Drawer();
