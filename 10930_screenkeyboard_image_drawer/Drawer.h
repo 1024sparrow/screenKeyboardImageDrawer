@@ -28,6 +28,7 @@ public:
     {
         QList<Source> variants;
     };
+    static bool sourceFromFile(const char *p_filePath, Source2 &p_retVal, const char **p_error);
 
     Drawer();
     QPixmap pixmap() const;

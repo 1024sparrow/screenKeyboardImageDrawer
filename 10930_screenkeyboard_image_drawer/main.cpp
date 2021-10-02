@@ -34,8 +34,6 @@ OPTIONS:
 --generate-sprite <path-to-file>
     result sprite will be written as sprite
 
---generate-sprite-builder
-
 SOURCE FILE FORMAT:
 Source file is a JSON-file with content like following:
 {
@@ -92,7 +90,7 @@ or like wollowing:
 )");
 			return 0;
 		}
-        else if (!strcmp(arg,"--generate-sprite")||!strcmp(arg,"--generate-sprite-builder")||!strcmp(arg,"--gui")||!strcmp(arg,"--generateBareDescriptor"))
+        else if (!strcmp(arg,"--generate-sprite")||!strcmp(arg,"--gui")||!strcmp(arg,"--generateBareDescriptor"))
             ;
 		else if (arg[0] == '-')
 		{
@@ -125,11 +123,11 @@ or like wollowing:
     }
 
     bool argGui = false;
+    const char *argSourceFilePath = nullptr;
     enum
     {
         sInitial,
-        sSprite,
-        sSpriteBuilder
+        sSprite
     } state {sInitial};
     for (int iArg = 0 ; iArg < argc ; ++iArg)
     {
@@ -144,11 +142,8 @@ or like wollowing:
             {
                 state = sSprite;
             }
-            else if (!strcmp(arg, "--generate-sprite-builder"))
-            {
-                state = sSpriteBuilder;
-            }
         }
+        //else if (state == sS)
     }
 
     Drawer::Source drawerSource{
