@@ -25,9 +25,6 @@ OPTIONS:
 --help
     print this message and close immediatelly
 
---generateBareDescriptor
-    print keyboard descriptor example and close immediatelly
-
 --gui
     if set then result in window will be shown
 
@@ -80,29 +77,6 @@ Source file is a JSON-file with content like following:
 			printf("Unknown key \"%s\". See help.\n", arg);
 			return 1;
 		}
-	}
-
-    for (int iArg = 0 ; iArg < argc ; ++iArg)
-    {
-        char *arg = argv[iArg];
-        if (!strcmp(arg,"--generateBareDescriptor"))
-        {
-            puts(R"({
-    "width": 1024,
-    "height": 600,
-    "buttons": {
-        "width": 24,
-        "height": 10,
-        "rows": [
-            "2: Ctrl:4 Win:16 Ctrl:4",
-            "2: Ctrl:4 Win:20",
-            "3: Ctrl:4 Win:8 Space:8 Ctrl:4",
-            "3: Ctrl:4 Win Alt:4 Space:8 Ctrl:4"
-        ]
-    }
-})");
-            return 0;
-        }
     }
 
     bool argGui = false;
@@ -112,7 +86,7 @@ Source file is a JSON-file with content like following:
         sInitial,
         sSprite // result file path
     } state {sInitial};
-    for (int iArg = 0 ; iArg < argc ; ++iArg)
+    for (int iArg = 1 ; iArg < argc ; ++iArg)
     {
         char *arg = argv[iArg];
         if (state == sInitial)
@@ -132,48 +106,22 @@ Source file is a JSON-file with content like following:
             }
             else
             {
+                if (argSourceFilePath)
+                {
+                    fputs("only one non-key argument expected\n", stderr);
+                    return 1;
+                }
                 argSourceFilePath = arg;
             }
         }
-        //else if (state == sS)
-    }
+        else if (state == sSprite)
+        {
+            // boris here
 
-//    Drawer::Source drawerSource{
-//        {
-//            {
-//                Drawer::Source::SourceVariant::orientVertical,
-//                {"ru","en"},
-//                512,
-//                300,
-//                {
-//                    24,
-//                    10,
-//                    QStringList{
-//                        "2: Ctrl:4 Win:16 Ctrl:4",
-//                        "2: Ctrl:4 Win:20",
-//                        "3: Ctrl:4 Win:8 Space:8 Ctrl:4",
-//                        "3: Ctrl:4 Win Alt:4 Space:8 Ctrl:4"
-//                    }
-//                }
-//            },
-//            {
-//                Drawer::Source::SourceVariant::orientVertical,
-//                {"ru","en"},
-//                256,
-//                300,
-//                {
-//                    24,
-//                    10,
-//                    QStringList{
-//                        "2: Ctrl:4 Win:16 Ctrl:4",
-//                        "2: Ctrl:4 Win:20",
-//                        "3: Ctrl:4 Win:8 Space:8 Ctrl:4",
-//                        "3: Ctrl:4 Win Alt:4 Space:8 Ctrl:4"
-//                    }
-//                }
-//            }
-//        }
-//    };
+            fputs("not implemented\n", stderr);//
+            return 1;//
+        }
+    }
 
     if (!argSourceFilePath)
     {
