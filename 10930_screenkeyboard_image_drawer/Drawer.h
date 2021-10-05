@@ -35,7 +35,7 @@ public:
     bool draw(const Source &p_source, const char **p_error);
 private:
     bool _drawVariant(const Source::SourceVariant &p_source, QPixmap &p_result, const char **p_error);
-    bool _drawVariantLay(const Source::SourceVariant &p_source, QPixmap &p_result, const char **p_error);
+    bool _drawVariantLay(const Source::SourceVariant &p_source, QPixmap &p_result, const QString &layoutId,  const char **p_error);
     void _drawButton(QPainter &p_painter, int p_x, int p_y, int p_w, int p_h, const QString &p_name);
 
     QPixmap _pixmap;

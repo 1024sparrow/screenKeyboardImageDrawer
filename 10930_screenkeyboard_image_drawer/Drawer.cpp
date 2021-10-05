@@ -54,7 +54,7 @@ bool Drawer::_drawVariant(const Source::SourceVariant &p_source, QPixmap &p_resu
     for (auto oLay : p_source.layouts)
     {
         QPixmap fragment;
-        if (!_drawVariantLay(p_source, fragment, p_error))
+        if (!_drawVariantLay(p_source, fragment, oLay, p_error))
             return false;
         if (p_source.orientation == Source::SourceVariant::orientVertical)
         {
@@ -89,7 +89,7 @@ bool Drawer::_drawVariant(const Source::SourceVariant &p_source, QPixmap &p_resu
     return true;
 }
 
-bool Drawer::_drawVariantLay(const Source::SourceVariant &p_source, QPixmap &p_result, const char **p_error)
+bool Drawer::_drawVariantLay(const Source::SourceVariant &p_source, QPixmap &p_result, const QString &layoutId, const char **p_error)
 {
 //    if (p_source.width < 256)
 //        E(too little width set (minimum 256));
@@ -97,7 +97,16 @@ bool Drawer::_drawVariantLay(const Source::SourceVariant &p_source, QPixmap &p_r
 //        E(too little height set (minimum 256));
 
     p_result = QPixmap(p_source.width, p_source.height);
-    p_result.fill(QColor(0x44,0,0));
+    QColor bgColor(Qt::black);
+    if (layoutId == "ru")
+    {
+        bgColor = QColor(0x66,0,0);
+    }
+    else if (layoutId == "en")
+    {
+        bgColor = QColor(0, 0x22, 0x44);
+    }
+    p_result.fill(bgColor);
 
     _scaleX = double(p_source.width+1) / double(p_source.buttons.width);
     _scaleY = double(p_source.height) / double(p_source.buttons.height);

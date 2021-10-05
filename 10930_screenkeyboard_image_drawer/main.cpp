@@ -110,7 +110,7 @@ Source file is a JSON-file with content like following:
     enum
     {
         sInitial,
-        sSprite
+        sSprite // result file path
     } state {sInitial};
     for (int iArg = 0 ; iArg < argc ; ++iArg)
     {
@@ -125,50 +125,71 @@ Source file is a JSON-file with content like following:
             {
                 state = sSprite;
             }
+            else if (arg[0] == '-')
+            {
+                fprintf(stderr, "unknown key \"%s\" passed\n", arg);
+                return 1;
+            }
+            else
+            {
+                argSourceFilePath = arg;
+            }
         }
         //else if (state == sS)
     }
 
-    Drawer::Source drawerSource{
-        {
-            {
-                Drawer::Source::SourceVariant::orientVertical,
-                {"ru","en"},
-                512,
-                300,
-                {
-                    24,
-                    10,
-                    QStringList{
-                        "2: Ctrl:4 Win:16 Ctrl:4",
-                        "2: Ctrl:4 Win:20",
-                        "3: Ctrl:4 Win:8 Space:8 Ctrl:4",
-                        "3: Ctrl:4 Win Alt:4 Space:8 Ctrl:4"
-                    }
-                }
-            },
-            {
-                Drawer::Source::SourceVariant::orientVertical,
-                {"ru","en"},
-                256,
-                300,
-                {
-                    24,
-                    10,
-                    QStringList{
-                        "2: Ctrl:4 Win:16 Ctrl:4",
-                        "2: Ctrl:4 Win:20",
-                        "3: Ctrl:4 Win:8 Space:8 Ctrl:4",
-                        "3: Ctrl:4 Win Alt:4 Space:8 Ctrl:4"
-                    }
-                }
-            }
-        }
-    };
+//    Drawer::Source drawerSource{
+//        {
+//            {
+//                Drawer::Source::SourceVariant::orientVertical,
+//                {"ru","en"},
+//                512,
+//                300,
+//                {
+//                    24,
+//                    10,
+//                    QStringList{
+//                        "2: Ctrl:4 Win:16 Ctrl:4",
+//                        "2: Ctrl:4 Win:20",
+//                        "3: Ctrl:4 Win:8 Space:8 Ctrl:4",
+//                        "3: Ctrl:4 Win Alt:4 Space:8 Ctrl:4"
+//                    }
+//                }
+//            },
+//            {
+//                Drawer::Source::SourceVariant::orientVertical,
+//                {"ru","en"},
+//                256,
+//                300,
+//                {
+//                    24,
+//                    10,
+//                    QStringList{
+//                        "2: Ctrl:4 Win:16 Ctrl:4",
+//                        "2: Ctrl:4 Win:20",
+//                        "3: Ctrl:4 Win:8 Space:8 Ctrl:4",
+//                        "3: Ctrl:4 Win Alt:4 Space:8 Ctrl:4"
+//                    }
+//                }
+//            }
+//        }
+//    };
+
+    if (!argSourceFilePath)
+    {
+        fputs("source file path not set\n", stderr);
+        return 1;
+    }
+    const char *error = 0;
+    Drawer::Source drawerSource;
+    if (!Drawer::sourceFromFile(argSourceFilePath, drawerSource, &error))
+    {
+        fputs(error, stderr);
+        return 1;
+    }
 
     QApplication app(argc, argv);
     Drawer drawer;
-    const char *error = 0;
     if (!drawer.draw(drawerSource, &error))
     {
         fputs(error, stderr);

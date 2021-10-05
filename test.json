@@ -1,0 +1,36 @@
+{
+    "variants": [
+        {
+            "orientation": "v",
+            "layouts": ["ru","en"],
+            "width": 512,
+            "height": 300,
+            "buttons": {
+                "width": 24,
+                "height": 10,
+                "rows": [
+                    "2: Ctrl:4 Win:16 Ctrl:4",
+                    "2: Ctrl:4 Win:20",
+                    "3: Ctrl:4 Win:8 Space:8 Ctrl:4",
+                    "3: Ctrl:4 Win Alt:4 Space:8 Ctrl:4"
+                ]
+            }
+        },
+        {
+            "orientation": "v",
+            "layouts": ["ru","en"],
+            "width": 256,
+            "height": 300,
+            "buttons": {
+                "width": 24,
+                "height": 10,
+                "rows": [
+                    "2: Ctrl:4 Win:16 Ctrl:4",
+                    "2: Ctrl:4 Win:20",
+                    "3: Ctrl:4 Win:8 Space:8 Ctrl:4",
+                    "3: Ctrl:4 Win Alt:4 Space:8 Ctrl:4"
+                ]
+            }
+        }
+    ]
+}
