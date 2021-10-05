@@ -134,8 +134,8 @@ Source file is a JSON-file with content like following:
             {
                 Drawer::Source::SourceVariant::orientVertical,
                 {"ru","en"},
-                1024,
-                600,
+                512,
+                300,
                 {
                     24,
                     10,
@@ -150,8 +150,8 @@ Source file is a JSON-file with content like following:
             {
                 Drawer::Source::SourceVariant::orientVertical,
                 {"ru","en"},
-                512,
-                600,
+                256,
+                300,
                 {
                     24,
                     10,

@@ -91,14 +91,11 @@ bool Drawer::_drawVariant(const Source::SourceVariant &p_source, QPixmap &p_resu
 
 bool Drawer::_drawVariantLay(const Source::SourceVariant &p_source, QPixmap &p_result, const char **p_error)
 {
-//    *error = "not iplemented\n";
-//    return false;
-    //E(not implemented)
+//    if (p_source.width < 256)
+//        E(too little width set (minimum 256));
+//    if (p_source.height < 256)
+//        E(too little height set (minimum 256));
 
-    if (p_source.width < 256)
-        E(too little width set (minimum 256));
-    if (p_source.height < 256)
-        E(too little height set (minimum 256));
     p_result = QPixmap(p_source.width, p_source.height);
     p_result.fill(QColor(0x44,0,0));
 
@@ -153,7 +150,7 @@ bool Drawer::_drawVariantLay(const Source::SourceVariant &p_source, QPixmap &p_r
                     {
                         // TODO: переходим к следующей кнопке
                         //qDebug() << "  button " << bnId.c_str();
-                        qDebug() << "1 button " << bnId << "with width " << bnWidth;
+                        //qDebug() << "1 button " << bnId << "with width " << bnWidth;
                         _drawButton(painter, x, y, bnWidth, rowHeight, bnId);
                         x += bnWidth;
 
@@ -184,7 +181,7 @@ bool Drawer::_drawVariantLay(const Source::SourceVariant &p_source, QPixmap &p_r
                 }
                 else if (ch == ' ')
                 {
-                    qDebug() << "2 button " << bnId << "with width " << bnWidth;
+                    //qDebug() << "2 button " << bnId << "with width " << bnWidth;
                     _drawButton(painter, x, y, bnWidth, rowHeight, bnId);
                     x += bnWidth;
                     bnId.clear();
@@ -202,7 +199,7 @@ bool Drawer::_drawVariantLay(const Source::SourceVariant &p_source, QPixmap &p_r
         }
         else if (bnWidth)
         {
-            qDebug() << "3 button " << bnId << "with width " << bnWidth;
+            //qDebug() << "3 button " << bnId << "with width " << bnWidth;
             _drawButton(painter, x, y, bnWidth, rowHeight, bnId);
         }
 //        qDebug() << "##" << source.width << x << bnWidth;
@@ -210,7 +207,7 @@ bool Drawer::_drawVariantLay(const Source::SourceVariant &p_source, QPixmap &p_r
         {
             E(Incorrect width for row)
         }
-        qDebug() << "rowHeight:" << rowHeight;
+        //qDebug() << "rowHeight:" << rowHeight;
         y += rowHeight;
     }
     if (p_source.buttons.height != y)
