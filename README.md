@@ -125,5 +125,8 @@ we taken the following result:
 
 
 ## LICENCE
+
+Copyright © 2021 [Васильев Борис](https://github.com/1024sparrow)
+
 Licensed by [MIT license](LICENSE).
 
