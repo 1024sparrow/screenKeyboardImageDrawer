@@ -33,40 +33,55 @@ OPTIONS:
 
 SOURCE FILE FORMAT:
 Source file is a JSON-file with content like following:
-{
-    variants: [
-        {
-            "orient": "v",
-            "layouts": ["ru","en"],
-            "width": 541,
-            "height": 143,
-            "buttons": {
-                "width": 24,
-                "height": 10,
-                "rows": [
-                    "2: Ctrl:4 Win:16 Ctrl:4",
-                    "2: Ctrl:4 Win:20",
-                    "3: Ctrl:4 Win:8 Space:8 Ctrl:4",
-                    "3: Ctrl:4 Win Alt:4 Space:8 Ctrl:4"
-                ]
-            }
-        },
-        {
-            "orient": "h",
-            "layouts": ["ru", "en"],
-            "width": 541,
-            "height": 541,
-            "buttons": {
-                "width": 2,
-                "height": 2,
-                "rows": [
-                    "1: 1:1 2",
-                    "1: 3:1"
-                ]
-            }
-        }
-    ]
-}
+ {
+     "variants": [
+         {
+             "orientation": "v",
+             "layouts": ["ru","en"],
+             "width": 512,
+             "height": 300,
+             "buttons": {
+                 "width": 24,
+                 "height": 10,
+                 "rows": [
+                     "2: Ctrl:4 Win:16 Ctrl:4",
+                     "2: Ctrl:4 Win:20",
+                     "3: Ctrl:4 Win:8 Space:8 Ctrl:4",
+                     "3: Ctrl:4 Win Alt:4 Space:8 Ctrl:4"
+                 ]
+             }
+         },
+         {
+             "orientation": "v",
+             "layouts": ["ru","en"],
+             "width": 256,
+             "height": 300,
+             "buttons": {
+                 "width": 24,
+                 "height": 10,
+                 "rows": [
+                     "2: Ctrl:4 Win:16 Ctrl:4",
+                     "2: Ctrl:4 Win:20",
+                     "3: Ctrl:4 Win:8 Space:8 Ctrl:4",
+                     "3: Ctrl:4 Win Alt:4 Space:8 Ctrl:4"
+                 ]
+             }
+         }
+     ]
+ }
+Variant button rows description:
+Example: "3: Ctrl:4 Win Alt:4 Space:8 Ctrl:4".
+          ┬  ──┬─ ┬ ─┬─
+          └ row height (3)
+               └ Button identifier (Ctrl)
+                  └ Button width (4)
+                     └ Button identifier (Win). The button width not set, so it's width will be taken as for previous button, i.e. equal 4.
+Buttons separated with ' '(space symbol(s))
+For each button may be set button width - after ':'-symbol. For first button in row it is required to be set button width.
+So we have row with height 3 and 5 buttons with the following widths: 4 for Ctrl, 4 for Win (as previous by default), 4 for Alt, 8 for Space, 4 for Ctrl
+
+Variant width - width in pixels
+Variant.buttons width - width in internal units. The same units used for row heights and buttons widths.
 )");
 			return 0;
 		}
@@ -81,6 +96,7 @@ Source file is a JSON-file with content like following:
 
     bool argGui = false;
     const char *argSourceFilePath = nullptr;
+    const char *argResultFilePath = nullptr;
     enum
     {
         sInitial,
@@ -116,11 +132,14 @@ Source file is a JSON-file with content like following:
         }
         else if (state == sSprite)
         {
-            // boris here
-
-            fputs("not implemented\n", stderr);//
-            return 1;//
+            argResultFilePath = arg;
+            state = sInitial;
         }
+    }
+    if (state != sInitial)
+    {
+        fputs("argument set incomplete. See help for details.\n", stderr);
+        return 1;
     }
 
     if (!argSourceFilePath)
@@ -142,6 +161,15 @@ Source file is a JSON-file with content like following:
     {
         fputs(error, stderr);
         return 1;
+    }
+
+    if (argResultFilePath)
+    {
+        if (!drawer.pixmap().save(argResultFilePath))
+        {
+            fputs("can not save result sprite\n", stderr);
+            return 1;
+        }
     }
 
     //return 0;//
