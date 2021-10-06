@@ -23,7 +23,10 @@ we taken the following result:
 
 echo '
 ## LICENCE
-Licensed by [MIT license](LICENSE).
+
+Copyright © 2021 [Васильев Борис](https://github.com/1024sparrow)
+
+Published by [MIT license](LICENSE).
 ' >> README.md
 
 popd
