@@ -35,7 +35,7 @@ bool Drawer::draw(const Source &p_source, const char **p_error)
     }
 
     _pixmap = QPixmap(x, h);
-    _pixmap.fill(Qt::red);
+    _pixmap.fill(Qt::transparent);
     QPainter painter(&_pixmap);
     x = 0;
     for (auto oFragment : fragments)
@@ -108,7 +108,8 @@ bool Drawer::_drawVariantLay(const Source::SourceVariant &p_source, QPixmap &p_r
     }
     p_result.fill(bgColor);
 
-    _scaleX = double(p_source.width+1) / double(p_source.buttons.width);
+    //_scaleX = double(p_source.width+1) / double(p_source.buttons.width);
+    _scaleX = double(p_source.width) / double(p_source.buttons.width);//
     _scaleY = double(p_source.height) / double(p_source.buttons.height);
 
     QPainter painter(&p_result);
