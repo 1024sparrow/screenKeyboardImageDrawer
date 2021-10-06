@@ -14,7 +14,7 @@ pushd $(dirname $0)
 
 ## USAGE EXAMPLE
 
-##LICENCE
+## LICENCE
 Licensed by [MIT license](LICENSE).
 ' >> README.md
 

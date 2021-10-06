@@ -77,6 +77,6 @@ Variant.buttons width - width in internal units. The same units used for row hei
 
 ## USAGE EXAMPLE
 
-##LICENCE
+## LICENCE
 Licensed by [MIT license](LICENSE).
 
