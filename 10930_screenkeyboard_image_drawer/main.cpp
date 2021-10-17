@@ -3,6 +3,7 @@
 #include <stdio.h>
 
 #include <QLabel>
+#include <QDebug>
 
 #include "Drawer.h"
 
@@ -17,8 +18,8 @@ int main(int argc, char **argv)
 Program 10930_screenkeyboard_image_drawer
 
 SYNOPSIS:
-    10930_screenkeyboard_image_drawer --generateBareDescriptor [--help]
-    10930_screenkeyboard_image_drawer [--gui] [--generate-sprite <path-to-file>] [--generate-sprite-builder <path-to-directory>] <sourceFile> [--help]
+    10930_screenkeyboard_image_drawer --help
+    10930_screenkeyboard_image_drawer [--gui] [--generate-sprite <path-to-file>] <sourceFile> [--help]
 
 OPTIONS:
 
@@ -85,7 +86,7 @@ Variant.buttons width - width in internal units. The same units used for row hei
 )");
 			return 0;
 		}
-        else if (!strcmp(arg,"--generate-sprite")||!strcmp(arg,"--gui")||!strcmp(arg,"--generateBareDescriptor"))
+        else if (!strcmp(arg,"--generate-sprite")||!strcmp(arg,"--gui"))
             ;
 		else if (arg[0] == '-')
 		{
@@ -165,14 +166,13 @@ Variant.buttons width - width in internal units. The same units used for row hei
 
     if (argResultFilePath)
     {
-        if (!drawer.pixmap().save(argResultFilePath))
+        if (!drawer.pixmap().save(QString(argResultFilePath) + ".png"))
         {
             fputs("can not save result sprite\n", stderr);
             return 1;
         }
     }
 
-    //return 0;//
     if (argGui)
     {
         QLabel label;
