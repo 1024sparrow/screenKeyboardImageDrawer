@@ -2,9 +2,86 @@
 
 #include <QPainter>
 #include <QList>
-#include <QDebug>//boris debug
 
 #define E(T) {*p_error=#T"\n";return false;}
+
+QString Drawer::Source::SourceVariant::toString() const
+{
+    //return "<not implemented>";
+    //return "{}";
+
+    QString strLayouts = layouts.join("\", \"");
+    QString strRows;
+    for (auto oRow : buttons.parsedRows)
+    {
+        if (!strRows.isEmpty())
+        {
+            strRows.append(",");
+        }
+        strRows.append(R"(
+                    )" + oRow.toString());
+    }
+
+    return QString(R"({
+            "layouts": ["%1"],
+            "width": %2,
+            "height": %3,
+            "buttons": {
+                "width": %4,
+                "height": %5,
+                "rows": [ %6
+                ]
+            }
+        })")
+        .arg(strLayouts)
+        .arg(width)
+        .arg(height)
+        .arg(buttons.width)
+        .arg(buttons.height)
+        .arg(strRows)
+    ;
+}
+
+QString Drawer::Source::SourceVariant::Buttons::Row::toString() const
+{
+    QString strButtons;
+    for (auto oButton : buttons)
+    {
+        if (!strButtons.isEmpty())
+            strButtons.append(",");
+        strButtons.append(QString(R"(
+                            {
+                                "width": %1,
+                                "id": "%2"
+                            })").arg(oButton.width).arg(oButton.id));
+    }
+    return QString(R"({
+                        "height": %1,
+                        "buttons": [ %2
+                        ]
+                    })")
+        .arg(height).arg(strButtons);
+}
+
+QString Drawer::Source::toString() const
+{
+    QString strArrVariants;
+    for (auto o : variants)
+    {
+        if (!strArrVariants.isEmpty())
+        {
+            strArrVariants.append(R"(,
+        )");
+        }
+        strArrVariants.append(o.toString());
+    }
+    return QString(R"({
+    "variants": [
+        %1
+    ]
+}
+)").arg(strArrVariants);
+}
 
 Drawer::Drawer()
 {
@@ -15,7 +92,7 @@ QPixmap Drawer::pixmap() const
     return _pixmap;
 }
 
-bool Drawer::draw(const Source &p_source, const char **p_error)
+bool Drawer::draw(Source &p_source, const char **p_error)
 {
     int
         x = 0,
@@ -23,7 +100,7 @@ bool Drawer::draw(const Source &p_source, const char **p_error)
     ;
 
     QList<QPixmap> fragments;
-    for (auto oVariant : p_source.variants)
+    for (auto &oVariant : p_source.variants)
     {
         QPixmap fragment;
         if (!_drawVariant(oVariant, fragment, p_error))
@@ -47,7 +124,7 @@ bool Drawer::draw(const Source &p_source, const char **p_error)
     return true;
 }
 
-bool Drawer::_drawVariant(const Source::SourceVariant &p_source, QPixmap &p_result, const char **p_error)
+bool Drawer::_drawVariant(Source::SourceVariant &p_source, QPixmap &p_result, const char **p_error)
 {
     int shift = 0, h = 0, w = 0;
     QList<QPixmap> fragments;
@@ -89,7 +166,7 @@ bool Drawer::_drawVariant(const Source::SourceVariant &p_source, QPixmap &p_resu
     return true;
 }
 
-bool Drawer::_drawVariantLay(const Source::SourceVariant &p_source, QPixmap &p_result, const QString &layoutId, const char **p_error)
+bool Drawer::_drawVariantLay(Source::SourceVariant &p_source, QPixmap &p_result, const QString &layoutId, const char **p_error)
 {
 //    if (p_source.width < 256)
 //        E(too little width set (minimum 256));
@@ -108,17 +185,16 @@ bool Drawer::_drawVariantLay(const Source::SourceVariant &p_source, QPixmap &p_r
     }
     p_result.fill(bgColor);
 
-    //_scaleX = double(p_source.width+1) / double(p_source.buttons.width);
     _scaleX = double(p_source.width) / double(p_source.buttons.width);//
     _scaleY = double(p_source.height) / double(p_source.buttons.height);
 
     QPainter painter(&p_result);
     painter.setPen(Qt::yellow);
-    //painter.drawRect(5,5,100,50);
 
     int x{0},y{0};
     for (QString oRow : p_source.buttons.rows)
     {
+        Source::SourceVariant::Buttons::Row parsedRow;
         int rowHeight = 0;
         QString bnId;
         int bnWidth = 0;
@@ -133,8 +209,6 @@ bool Drawer::_drawVariantLay(const Source::SourceVariant &p_source, QPixmap &p_r
 
         for (char ch : oRow.toStdString())
         {
-            //if (ch == ' ')
-            //    continue;
             if (state == sRowHeight)
             {
                 if (ch >= '0' && ch <= '9')
@@ -153,14 +227,12 @@ bool Drawer::_drawVariantLay(const Source::SourceVariant &p_source, QPixmap &p_r
             }
             else if (state == sBnId)
             {
-                //qDebug() << "** " << ch;
                 if (ch == ' ')
                 {
                     if (bnId.length())
                     {
-                        // TODO: переходим к следующей кнопке
-                        //qDebug() << "  button " << bnId.c_str();
-                        //qDebug() << "1 button " << bnId << "with width " << bnWidth;
+                        parsedRow.height = rowHeight;
+                        parsedRow.buttons.append({bnWidth, bnId});
                         _drawButton(painter, x, y, bnWidth, rowHeight, bnId);
                         x += bnWidth;
 
@@ -184,14 +256,14 @@ bool Drawer::_drawVariantLay(const Source::SourceVariant &p_source, QPixmap &p_r
             }
             else if (state == sBnWidth)
             {
-                //qDebug() << "====button " << bnId << bnWidth << ":" << ch;
                 if (ch >= '0' && ch <= '9')
                 {
                     bnWidth = 10 * bnWidth + static_cast<int>(ch - '0');
                 }
                 else if (ch == ' ')
                 {
-                    //qDebug() << "2 button " << bnId << "with width " << bnWidth;
+                    parsedRow.height = rowHeight;
+                    parsedRow.buttons.append({bnWidth, bnId});
                     _drawButton(painter, x, y, bnWidth, rowHeight, bnId);
                     x += bnWidth;
                     bnId.clear();
@@ -199,7 +271,7 @@ bool Drawer::_drawVariantLay(const Source::SourceVariant &p_source, QPixmap &p_r
                 }
                 else
                 {
-                    qDebug() << "+++++++++" << ch;
+                    E(incorrect button width format);
                 }
             }
         }
@@ -209,15 +281,18 @@ bool Drawer::_drawVariantLay(const Source::SourceVariant &p_source, QPixmap &p_r
         }
         else if (bnWidth)
         {
-            //qDebug() << "3 button " << bnId << "with width " << bnWidth;
+            parsedRow.height = rowHeight;
+            parsedRow.buttons.append({bnWidth, bnId});
             _drawButton(painter, x, y, bnWidth, rowHeight, bnId);
         }
-//        qDebug() << "##" << source.width << x << bnWidth;
         if (p_source.buttons.width != (x + bnWidth))
         {
             E(Incorrect width for row)
         }
-        //qDebug() << "rowHeight:" << rowHeight;
+        if (layoutId == p_source.layouts[0])
+        {
+            p_source.buttons.parsedRows.append(parsedRow);
+        }
         y += rowHeight;
     }
     if (p_source.buttons.height != y)
@@ -225,7 +300,6 @@ bool Drawer::_drawVariantLay(const Source::SourceVariant &p_source, QPixmap &p_r
         E(Incorrect height fow rows)
     }
 
-    //E(not implemented);
     return true;
 }
 
@@ -237,8 +311,6 @@ void Drawer::_drawButton(QPainter &p_painter, int p_x, int p_y, int p_w, int p_h
         w = (double)_scaleX * (double)p_w,
         h = (double)_scaleY * (double)p_h
     ;
-    //p_painter.drawRect(x,y,w,h);
-    //p_painter.drawRect(QRectF(x,y,w-1,h-1));
     p_painter.drawRect(QRectF(x,y,w,h));
 
     p_painter.drawText(QRect(x,y,w,h), p_name, QTextOption(Qt::AlignCenter));

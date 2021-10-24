@@ -7,8 +7,8 @@
 Program 10930_screenkeyboard_image_drawer
 
 SYNOPSIS:
-    10930_screenkeyboard_image_drawer --generateBareDescriptor [--help]
-    10930_screenkeyboard_image_drawer [--gui] [--generate-sprite <path-to-file>] [--generate-sprite-builder <path-to-directory>] <sourceFile> [--help]
+    10930_screenkeyboard_image_drawer --help
+    10930_screenkeyboard_image_drawer [--gui] [--generate-sprite <path-to-file>] <sourceFile> [--help]
 
 OPTIONS:
 
@@ -19,7 +19,8 @@ OPTIONS:
     if set then result in window will be shown
 
 --generate-sprite <path-to-file>
-    result sprite will be written as sprite
+    result sprite will be written as sprite.
+    Lets <path-to-file>=TARGET. In this case result is two files: TARGET.png (with sprite image) and TARGET.json (width sprite detailed description)
 
 SOURCE FILE FORMAT:
 Source file is a JSON-file with content like following:
@@ -72,6 +73,8 @@ So we have row with height 3 and 5 buttons with the following widths: 4 for Ctrl
 
 Variant width - width in pixels
 Variant.buttons width - width in internal units. The same units used for row heights and buttons widths.
+
+Version 1.0
 
 ```
 

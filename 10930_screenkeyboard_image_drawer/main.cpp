@@ -3,6 +3,8 @@
 #include <stdio.h>
 
 #include <QLabel>
+#include <QFile>
+#include <QTextStream>
 #include <QDebug>
 
 #include "Drawer.h"
@@ -30,7 +32,8 @@ OPTIONS:
     if set then result in window will be shown
 
 --generate-sprite <path-to-file>
-    result sprite will be written as sprite
+    result sprite will be written as sprite.
+    Lets <path-to-file>=TARGET. In this case result is two files: TARGET.png (with sprite image) and TARGET.json (width sprite detailed description)
 
 SOURCE FILE FORMAT:
 Source file is a JSON-file with content like following:
@@ -83,6 +86,8 @@ So we have row with height 3 and 5 buttons with the following widths: 4 for Ctrl
 
 Variant width - width in pixels
 Variant.buttons width - width in internal units. The same units used for row heights and buttons widths.
+
+Version 1.0
 )");
 			return 0;
 		}
@@ -171,6 +176,15 @@ Variant.buttons width - width in internal units. The same units used for row hei
             fputs("can not save result sprite\n", stderr);
             return 1;
         }
+
+        QFile fileJson(QString(argResultFilePath) + ".json");
+        if (!fileJson.open(QIODevice::WriteOnly | QIODevice::Truncate))
+        {
+            fputs("can not create JSON-file", stderr);
+            return 1;
+        }
+        QTextStream ts(&fileJson);
+        ts << drawerSource.toString();
     }
 
     if (argGui)

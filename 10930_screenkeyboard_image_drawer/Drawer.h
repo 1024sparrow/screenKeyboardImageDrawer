@@ -8,7 +8,7 @@ class Drawer final
 public:
     struct Source
     {
-        struct SourceVariant
+        struct SourceVariant//==================================
         {
             enum {
                 orientVertical,
@@ -22,20 +22,35 @@ public:
                 int width; // logic units of layout
                 int height;
                 QStringList rows;
+                struct Row
+                {
+                    int height = -1;
+                    struct Button
+                    {
+                        int width = -1;
+                        QString id = "<indefined>";
+                    };
+                    QList<Button> buttons;
+                    QString toString() const;
+                };
+                QList<Row> parsedRows;
             } buttons;
 
             //const char *
-        };
+            QString toString() const;
+        };//==================================
         QList<SourceVariant> variants;
+
+        QString toString() const;
     };
     static bool sourceFromFile(const char *p_filePath, Source &p_retVal, const char **p_error);
 
     Drawer();
     QPixmap pixmap() const;
-    bool draw(const Source &p_source, const char **p_error);
+    bool draw(Source &p_source, const char **p_error);
 private:
-    bool _drawVariant(const Source::SourceVariant &p_source, QPixmap &p_result, const char **p_error);
-    bool _drawVariantLay(const Source::SourceVariant &p_source, QPixmap &p_result, const QString &layoutId,  const char **p_error);
+    bool _drawVariant(Source::SourceVariant &p_source, QPixmap &p_result, const char **p_error);
+    bool _drawVariantLay(Source::SourceVariant &p_source, QPixmap &p_result, const QString &layoutId,  const char **p_error);
     void _drawButton(QPainter &p_painter, int p_x, int p_y, int p_w, int p_h, const QString &p_name);
 
     QPixmap _pixmap;

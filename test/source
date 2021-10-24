@@ -1,0 +1,32 @@
+{
+    "variants": [
+        {
+            "orientation": "v",
+            "layouts": ["ru", "en"],
+            "width": 470,
+            "height": 180,
+            "buttons": {
+                "width": 11,
+                "height": 6,
+                "rows": [
+                    "3: Esc:3 F1 Del:5",
+                    "3: Tab:5 Q:3 W"
+                ]
+            }
+        },
+        {
+            "orientation": "v",
+            "layouts": ["ru", "en"],
+            "width": 680,
+            "height": 190,
+            "buttons": {
+                "width": 12,
+                "height": 6,
+                "rows": [
+                    "3: Shift:6 Z:3 X",
+                    "3: Ctrl:4 Win Alt"
+                ]
+            }
+        }
+    ]
+}
